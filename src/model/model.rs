@@ -22,9 +22,7 @@ use stremio_core::{
     },
     runtime::Effects,
     types::{
-        addon::DescriptorPreview, api::LinkAuthKey, events::DismissedEventsBucket,
-        library::LibraryBucket, notifications::NotificationsBucket, profile::Profile,
-        resource::MetaItemPreview, search_history::SearchHistoryBucket, streams::StreamsBucket,
+        addon::DescriptorPreview, api::LinkAuthKey, calendar::CalendarBucket, events::DismissedEventsBucket, library::LibraryBucket, notifications::NotificationsBucket, profile::Profile, resource::MetaItemPreview, search_history::SearchHistoryBucket, streams::StreamsBucket
     },
     Model,
 };
@@ -68,6 +66,7 @@ impl WebModel {
         library: LibraryBucket,
         streams: StreamsBucket,
         notifications: NotificationsBucket,
+        calendar: CalendarBucket,
         search_history: SearchHistoryBucket,
         dismissed_events: DismissedEventsBucket,
     ) -> (WebModel, Effects) {
@@ -90,6 +89,7 @@ impl WebModel {
                 library,
                 streams,
                 notifications,
+                calendar,
                 search_history,
                 dismissed_events,
             ),
