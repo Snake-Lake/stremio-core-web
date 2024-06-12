@@ -10,12 +10,16 @@ use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
 
 use stremio_core::{
     constants::{
-        CALENDAR_STORAGE_KEY, DISMISSED_EVENTS_STORAGE_KEY, LIBRARY_RECENT_STORAGE_KEY, LIBRARY_STORAGE_KEY, NOTIFICATIONS_STORAGE_KEY, PROFILE_STORAGE_KEY, SEARCH_HISTORY_STORAGE_KEY, STREAMS_STORAGE_KEY
+        CALENDAR_STORAGE_KEY, DISMISSED_EVENTS_STORAGE_KEY, LIBRARY_RECENT_STORAGE_KEY,
+        LIBRARY_STORAGE_KEY, NOTIFICATIONS_STORAGE_KEY, PROFILE_STORAGE_KEY,
+        SEARCH_HISTORY_STORAGE_KEY, STREAMS_STORAGE_KEY,
     },
     models::common::Loadable,
     runtime::{msg::Action, Env, EnvError, Runtime, RuntimeAction, RuntimeEvent},
     types::{
-        calendar::CalendarBucket, events::DismissedEventsBucket, library::LibraryBucket, notifications::NotificationsBucket, profile::Profile, resource::Stream, search_history::SearchHistoryBucket, streams::StreamsBucket
+        calendar::CalendarBucket, events::DismissedEventsBucket, library::LibraryBucket,
+        notifications::NotificationsBucket, profile::Profile, resource::Stream,
+        search_history::SearchHistoryBucket, streams::StreamsBucket,
     },
 };
 

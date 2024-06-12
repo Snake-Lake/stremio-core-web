@@ -22,7 +22,10 @@ use stremio_core::{
     },
     runtime::Effects,
     types::{
-        addon::DescriptorPreview, api::LinkAuthKey, calendar::CalendarBucket, events::DismissedEventsBucket, library::LibraryBucket, notifications::NotificationsBucket, profile::Profile, resource::MetaItemPreview, search_history::SearchHistoryBucket, streams::StreamsBucket
+        addon::DescriptorPreview, api::LinkAuthKey, calendar::CalendarBucket,
+        events::DismissedEventsBucket, library::LibraryBucket, notifications::NotificationsBucket,
+        profile::Profile, resource::MetaItemPreview, search_history::SearchHistoryBucket,
+        streams::StreamsBucket,
     },
     Model,
 };
