@@ -15,7 +15,6 @@ mod model {
     use serde::Serialize;
 
     use stremio_core::deep_links::SearchHistoryItemDeepLinks;
-    use stremio_core::types::calendar::CalendarItem;
     use stremio_core::types::{
         events::Events, notifications::NotificationItem, profile::Profile, resource::MetaItemId,
     };
@@ -27,7 +26,6 @@ mod model {
     pub struct Ctx<'a> {
         /// keep the original Profile model inside.
         pub profile: &'a Profile,
-        pub calendar: Calendar<'a>,
         pub notifications: Notifications<'a>,
         pub search_history: Vec<SearchHistoryItem<'a>>,
         pub events: &'a Events,
@@ -44,15 +42,6 @@ mod model {
 
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
-    pub struct Calendar<'a> {
-        /// Override the notifications to simplify the mapping
-        pub items: HashMap<MetaItemId, Vec<&'a CalendarItem>>,
-        pub last_updated: Option<DateTime<Utc>>,
-        pub created: DateTime<Utc>,
-    }
-
-    #[derive(Serialize)]
-    #[serde(rename_all = "camelCase")]
     pub struct SearchHistoryItem<'a> {
         pub query: &'a String,
         pub deep_links: SearchHistoryItemDeepLinks,
@@ -62,18 +51,6 @@ mod model {
         fn from(ctx: &'a stremio_core::models::ctx::Ctx) -> Self {
             Self {
                 profile: &ctx.profile,
-                calendar: Calendar {
-                    items: ctx
-                        .calendar
-                        .items
-                        .iter()
-                        .map(|(meta_id, new_videos)| {
-                            (meta_id.to_owned(), new_videos.values().collect())
-                        })
-                        .collect(),
-                    last_updated: ctx.calendar.last_updated,
-                    created: ctx.calendar.created,
-                },
                 notifications: Notifications {
                     items: ctx
                         .notifications

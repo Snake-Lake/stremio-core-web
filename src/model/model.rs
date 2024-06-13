@@ -6,19 +6,7 @@ use wasm_bindgen::JsValue;
 
 use stremio_core::{
     models::{
-        addon_details::AddonDetails,
-        catalog_with_filters::CatalogWithFilters,
-        catalogs_with_extra::CatalogsWithExtra,
-        continue_watching_preview::ContinueWatchingPreview,
-        ctx::Ctx,
-        data_export::DataExport,
-        installed_addons_with_filters::InstalledAddonsWithFilters,
-        library_with_filters::{ContinueWatchingFilter, LibraryWithFilters, NotRemovedFilter},
-        link::Link,
-        local_search::LocalSearch,
-        meta_details::MetaDetails,
-        player::Player,
-        streaming_server::StreamingServer,
+        addon_details::AddonDetails, calendar::Calendar, catalog_with_filters::CatalogWithFilters, catalogs_with_extra::CatalogsWithExtra, continue_watching_preview::ContinueWatchingPreview, ctx::Ctx, data_export::DataExport, installed_addons_with_filters::InstalledAddonsWithFilters, library_with_filters::{ContinueWatchingFilter, LibraryWithFilters, NotRemovedFilter}, link::Link, local_search::LocalSearch, meta_details::MetaDetails, player::Player, streaming_server::StreamingServer
     },
     runtime::Effects,
     types::{
@@ -40,6 +28,8 @@ use crate::{
     },
 };
 
+use super::serialize_calendar;
+
 #[derive(Model, Clone)]
 #[cfg_attr(debug_assertions, derive(Serialize))]
 #[model(WebEnv)]
@@ -52,6 +42,7 @@ pub struct WebModel {
     pub discover: CatalogWithFilters<MetaItemPreview>,
     pub library: LibraryWithFilters<NotRemovedFilter>,
     pub continue_watching: LibraryWithFilters<ContinueWatchingFilter>,
+    pub calendar: Calendar,
     pub search: CatalogsWithExtra,
     /// Pre-loaded results for local search
     pub local_search: LocalSearch,
@@ -69,7 +60,7 @@ impl WebModel {
         library: LibraryBucket,
         streams: StreamsBucket,
         notifications: NotificationsBucket,
-        calendar: CalendarBucket,
+        calendar_bucket: CalendarBucket,
         search_history: SearchHistoryBucket,
         dismissed_events: DismissedEventsBucket,
     ) -> (WebModel, Effects) {
@@ -86,13 +77,15 @@ impl WebModel {
             InstalledAddonsWithFilters::new(&profile);
         let (streaming_server, streaming_server_effects) = StreamingServer::new::<WebEnv>(&profile);
         let (local_search, local_search_effects) = LocalSearch::new::<WebEnv>();
+
+        let calendar = Calendar::new(calendar_bucket);
+
         let model = WebModel {
             ctx: Ctx::new(
                 profile,
                 library,
                 streams,
                 notifications,
-                calendar,
                 search_history,
                 dismissed_events,
             ),
@@ -104,6 +97,7 @@ impl WebModel {
             discover,
             library: library_,
             continue_watching,
+            calendar,
             search: Default::default(),
             meta_details: Default::default(),
             remote_addons,
@@ -153,6 +147,7 @@ impl WebModel {
                 "continuewatching".to_owned(),
             ),
             WebModelField::Search => serialize_catalogs_with_extra(&self.search, &self.ctx),
+            WebModelField::Calendar => serialize_calendar(&self.calendar),
             WebModelField::LocalSearch => serialize_local_search(&self.local_search),
             WebModelField::MetaDetails => {
                 serialize_meta_details(&self.meta_details, &self.ctx, &self.streaming_server)
