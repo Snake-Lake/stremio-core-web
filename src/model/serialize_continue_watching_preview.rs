@@ -138,6 +138,7 @@ mod model {
         pub poster: &'a Option<Url>,
         pub poster_shape: &'a PosterShape,
         pub progress: f64,
+        pub watched: bool,
         pub deep_links: LibraryItemDeepLinks,
         pub state: LibraryItemState<'a>,
     }
@@ -170,6 +171,7 @@ mod model {
                     _ => &library_item.poster_shape,
                 },
                 progress: library_item.progress(),
+                watched: library_item.watched(),
                 deep_links: LibraryItemDeepLinks::from((
                     library_item,
                     streams_item,
