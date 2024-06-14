@@ -6,7 +6,20 @@ use wasm_bindgen::JsValue;
 
 use stremio_core::{
     models::{
-        addon_details::AddonDetails, calendar::Calendar, catalog_with_filters::CatalogWithFilters, catalogs_with_extra::CatalogsWithExtra, continue_watching_preview::ContinueWatchingPreview, ctx::Ctx, data_export::DataExport, installed_addons_with_filters::InstalledAddonsWithFilters, library_with_filters::{ContinueWatchingFilter, LibraryWithFilters, NotRemovedFilter}, link::Link, local_search::LocalSearch, meta_details::MetaDetails, player::Player, streaming_server::StreamingServer
+        addon_details::AddonDetails,
+        calendar::Calendar,
+        catalog_with_filters::CatalogWithFilters,
+        catalogs_with_extra::CatalogsWithExtra,
+        continue_watching_preview::ContinueWatchingPreview,
+        ctx::Ctx,
+        data_export::DataExport,
+        installed_addons_with_filters::InstalledAddonsWithFilters,
+        library_with_filters::{ContinueWatchingFilter, LibraryWithFilters, NotRemovedFilter},
+        link::Link,
+        local_search::LocalSearch,
+        meta_details::MetaDetails,
+        player::Player,
+        streaming_server::StreamingServer,
     },
     runtime::Effects,
     types::{

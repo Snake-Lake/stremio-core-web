@@ -4,7 +4,8 @@ use gloo_utils::format::JsValueSerdeExt;
 use wasm_bindgen::JsValue;
 
 pub fn serialize_calendar(calendar: &stremio_core::models::calendar::Calendar) -> JsValue {
-    <JsValue as JsValueSerdeExt>::from_serde(&Calendar::from(calendar)).expect("JsValue from Calendar")
+    <JsValue as JsValueSerdeExt>::from_serde(&Calendar::from(calendar))
+        .expect("JsValue from Calendar")
 }
 
 mod model {
