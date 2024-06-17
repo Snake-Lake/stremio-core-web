@@ -6,14 +6,26 @@ use wasm_bindgen::JsValue;
 
 use stremio_core::{
     models::{
-        addon_details::AddonDetails, calendar::Calendar, catalog_with_filters::CatalogWithFilters, catalogs_with_extra::CatalogsWithExtra, continue_watching_preview::ContinueWatchingPreview, ctx::Ctx, data_export::DataExport, installed_addons_with_filters::InstalledAddonsWithFilters, library_with_filters::{ContinueWatchingFilter, LibraryWithFilters, NotRemovedFilter}, link::Link, local_search::LocalSearch, meta_details::MetaDetails, player::Player, streaming_server::StreamingServer
+        addon_details::AddonDetails,
+        calendar::Calendar,
+        catalog_with_filters::CatalogWithFilters,
+        catalogs_with_extra::CatalogsWithExtra,
+        continue_watching_preview::ContinueWatchingPreview,
+        ctx::Ctx,
+        data_export::DataExport,
+        installed_addons_with_filters::InstalledAddonsWithFilters,
+        library_with_filters::{ContinueWatchingFilter, LibraryWithFilters, NotRemovedFilter},
+        link::Link,
+        local_search::LocalSearch,
+        meta_details::MetaDetails,
+        player::Player,
+        streaming_server::StreamingServer,
     },
     runtime::Effects,
     types::{
-        addon::DescriptorPreview, api::LinkAuthKey, calendar::CalendarBucket,
-        events::DismissedEventsBucket, library::LibraryBucket, notifications::NotificationsBucket,
-        profile::Profile, resource::MetaItemPreview, search_history::SearchHistoryBucket,
-        streams::StreamsBucket,
+        addon::DescriptorPreview, api::LinkAuthKey, events::DismissedEventsBucket,
+        library::LibraryBucket, notifications::NotificationsBucket, profile::Profile,
+        resource::MetaItemPreview, search_history::SearchHistoryBucket, streams::StreamsBucket,
     },
     Model,
 };
@@ -60,7 +72,6 @@ impl WebModel {
         library: LibraryBucket,
         streams: StreamsBucket,
         notifications: NotificationsBucket,
-        calendar_bucket: CalendarBucket,
         search_history: SearchHistoryBucket,
         dismissed_events: DismissedEventsBucket,
     ) -> (WebModel, Effects) {
@@ -77,8 +88,6 @@ impl WebModel {
             InstalledAddonsWithFilters::new(&profile);
         let (streaming_server, streaming_server_effects) = StreamingServer::new::<WebEnv>(&profile);
         let (local_search, local_search_effects) = LocalSearch::new::<WebEnv>();
-
-        let calendar = Calendar::new(calendar_bucket);
 
         let model = WebModel {
             ctx: Ctx::new(
@@ -97,7 +106,7 @@ impl WebModel {
             discover,
             library: library_,
             continue_watching,
-            calendar,
+            calendar: Default::default(),
             search: Default::default(),
             meta_details: Default::default(),
             remote_addons,

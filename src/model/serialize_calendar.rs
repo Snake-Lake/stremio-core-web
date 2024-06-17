@@ -1,25 +1,110 @@
-pub use model::Calendar;
-
 use gloo_utils::format::JsValueSerdeExt;
+use itertools::Itertools;
+use serde::Serialize;
+use stremio_core::{
+    deep_links::{CalendarDeepLinks, CalendarItemDeepLinks},
+    models::calendar::{Date, Month, MonthInfo, Selected, Year},
+    types::resource::SeriesInfo,
+};
+use url::Url;
 use wasm_bindgen::JsValue;
 
-pub fn serialize_calendar(calendar: &stremio_core::models::calendar::Calendar) -> JsValue {
-    <JsValue as JsValueSerdeExt>::from_serde(&Calendar::from(calendar)).expect("JsValue from Calendar")
-}
+use crate::model::deep_links_ext::DeepLinksExt;
 
 mod model {
-    use serde::Serialize;
+    use super::*;
+
+    #[derive(Serialize)]
+    #[serde(rename_all = "camelCase")]
+    pub struct CalendarContentItem<'a> {
+        pub id: &'a String,
+        pub name: &'a String,
+        pub poster: &'a Option<Url>,
+        pub title: &'a String,
+        #[serde(flatten)]
+        pub series_info: &'a Option<SeriesInfo>,
+        pub deep_links: CalendarItemDeepLinks,
+    }
+
+    #[derive(Serialize)]
+    #[serde(rename_all = "camelCase")]
+    pub struct CalendarItem<'a> {
+        pub date: &'a Date,
+        pub items: Vec<CalendarContentItem<'a>>,
+    }
+
+    #[derive(Serialize)]
+    #[serde(rename_all = "camelCase")]
+    pub struct SelectableDate {
+        pub month: Month,
+        pub year: Year,
+        pub selected: bool,
+        pub deep_links: CalendarDeepLinks,
+    }
+
+    #[derive(Serialize)]
+    #[serde(rename_all = "camelCase")]
+    pub struct Selectable {
+        pub prev: SelectableDate,
+        pub next: SelectableDate,
+    }
 
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     pub struct Calendar<'a> {
-        #[serde(flatten)]
-        pub calendar: &'a stremio_core::models::calendar::Calendar,
+        pub selected: &'a Option<Selected>,
+        pub selectable: Selectable,
+        pub month_info: &'a MonthInfo,
+        pub items: &'a Vec<CalendarItem<'a>>,
     }
+}
 
-    impl<'a> From<&'a stremio_core::models::calendar::Calendar> for Calendar<'a> {
-        fn from(calendar: &'a stremio_core::models::calendar::Calendar) -> Self {
-            Self { calendar }
-        }
-    }
+pub fn serialize_calendar(calendar: &stremio_core::models::calendar::Calendar) -> JsValue {
+    <JsValue as JsValueSerdeExt>::from_serde(&model::Calendar {
+        selected: &calendar.selected,
+        selectable: model::Selectable {
+            prev: model::SelectableDate {
+                month: calendar.selectable.prev.month,
+                year: calendar.selectable.prev.year,
+                selected: true,
+                deep_links: CalendarDeepLinks::from((
+                    &calendar.selectable.prev.year,
+                    &calendar.selectable.prev.month,
+                ))
+                .into_web_deep_links(),
+            },
+            next: model::SelectableDate {
+                month: calendar.selectable.next.month,
+                year: calendar.selectable.next.year,
+                selected: true,
+                deep_links: CalendarDeepLinks::from((
+                    &calendar.selectable.next.year,
+                    &calendar.selectable.next.month,
+                ))
+                .into_web_deep_links(),
+            },
+        },
+        month_info: &calendar.month_info,
+        items: &calendar
+            .items
+            .iter()
+            .map(|item| model::CalendarItem {
+                date: &item.date,
+                items: item
+                    .items
+                    .iter()
+                    .map(|item| model::CalendarContentItem {
+                        id: &item.video.id,
+                        name: &item.meta_item.preview.name,
+                        poster: &item.meta_item.preview.poster,
+                        title: &item.video.title,
+                        series_info: &item.video.series_info,
+                        deep_links: CalendarItemDeepLinks::from((&item.meta_item, &item.video))
+                            .into_web_deep_links(),
+                    })
+                    .collect_vec(),
+            })
+            .collect_vec(),
+    })
+    .expect("JsValue from model::Calendar")
 }
