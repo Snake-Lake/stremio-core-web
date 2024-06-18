@@ -3,7 +3,7 @@ use itertools::Itertools;
 use serde::Serialize;
 use stremio_core::{
     deep_links::{CalendarDeepLinks, CalendarItemDeepLinks},
-    models::calendar::{Date, Month, MonthInfo, Selected, Year},
+    models::calendar::{Date, MonthInfo, Selected},
     types::resource::SeriesInfo,
 };
 use url::Url;
@@ -35,25 +35,25 @@ mod model {
 
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
-    pub struct SelectableDate {
-        pub month: Month,
-        pub year: Year,
+    pub struct SelectableDate<'a> {
+        #[serde(flatten)]
+        pub date: &'a Date,
         pub selected: bool,
         pub deep_links: CalendarDeepLinks,
     }
 
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
-    pub struct Selectable {
-        pub prev: SelectableDate,
-        pub next: SelectableDate,
+    pub struct Selectable<'a> {
+        pub prev: SelectableDate<'a>,
+        pub next: SelectableDate<'a>,
     }
 
     #[derive(Serialize)]
     #[serde(rename_all = "camelCase")]
     pub struct Calendar<'a> {
         pub selected: &'a Option<Selected>,
-        pub selectable: Selectable,
+        pub selectable: Selectable<'a>,
         pub month_info: &'a MonthInfo,
         pub items: &'a Vec<CalendarItem<'a>>,
     }
@@ -64,24 +64,16 @@ pub fn serialize_calendar(calendar: &stremio_core::models::calendar::Calendar) -
         selected: &calendar.selected,
         selectable: model::Selectable {
             prev: model::SelectableDate {
-                month: calendar.selectable.prev.month,
-                year: calendar.selectable.prev.year,
+                date: &calendar.selectable.prev,
                 selected: true,
-                deep_links: CalendarDeepLinks::from((
-                    &calendar.selectable.prev.year,
-                    &calendar.selectable.prev.month,
-                ))
-                .into_web_deep_links(),
+                deep_links: CalendarDeepLinks::from(&calendar.selectable.prev)
+                    .into_web_deep_links(),
             },
             next: model::SelectableDate {
-                month: calendar.selectable.next.month,
-                year: calendar.selectable.next.year,
+                date: &calendar.selectable.next,
                 selected: true,
-                deep_links: CalendarDeepLinks::from((
-                    &calendar.selectable.next.year,
-                    &calendar.selectable.next.month,
-                ))
-                .into_web_deep_links(),
+                deep_links: CalendarDeepLinks::from(&calendar.selectable.next)
+                    .into_web_deep_links(),
             },
         },
         month_info: &calendar.month_info,
