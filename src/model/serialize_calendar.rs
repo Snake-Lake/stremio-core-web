@@ -38,7 +38,6 @@ mod model {
     pub struct SelectableDate<'a> {
         #[serde(flatten)]
         pub date: &'a Date,
-        pub selected: bool,
         pub deep_links: CalendarDeepLinks,
     }
 
@@ -65,13 +64,11 @@ pub fn serialize_calendar(calendar: &stremio_core::models::calendar::Calendar) -
         selectable: model::Selectable {
             prev: model::SelectableDate {
                 date: &calendar.selectable.prev,
-                selected: true,
                 deep_links: CalendarDeepLinks::from(&calendar.selectable.prev)
                     .into_web_deep_links(),
             },
             next: model::SelectableDate {
                 date: &calendar.selectable.next,
-                selected: true,
                 deep_links: CalendarDeepLinks::from(&calendar.selectable.next)
                     .into_web_deep_links(),
             },
