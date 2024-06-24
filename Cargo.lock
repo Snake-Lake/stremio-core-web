@@ -1013,7 +1013,7 @@ dependencies = [
 [[package]]
 name = "stremio-core"
 version = "0.1.0"
-source = "git+https://github.com/Stremio/stremio-core?branch=feat/calendar-model#fcb0b663d97fad9416e63aa837e88199cefa7552"
+source = "git+https://github.com/Stremio/stremio-core?branch=feat/calendar-model#84abd398051049eda107d9c7726f54fac258843b"
 dependencies = [
  "anyhow",
  "base64 0.21.7",
@@ -1092,7 +1092,7 @@ dependencies = [
 [[package]]
 name = "stremio-derive"
 version = "0.1.0"
-source = "git+https://github.com/Stremio/stremio-core?branch=feat/calendar-model#fcb0b663d97fad9416e63aa837e88199cefa7552"
+source = "git+https://github.com/Stremio/stremio-core?branch=feat/calendar-model#84abd398051049eda107d9c7726f54fac258843b"
 dependencies = [
  "case",
  "proc-macro-crate",
@@ -1126,7 +1126,7 @@ dependencies = [
 [[package]]
 name = "stremio-watched-bitfield"
 version = "0.1.0"
-source = "git+https://github.com/Stremio/stremio-core?branch=feat/calendar-model#fcb0b663d97fad9416e63aa837e88199cefa7552"
+source = "git+https://github.com/Stremio/stremio-core?branch=feat/calendar-model#84abd398051049eda107d9c7726f54fac258843b"
 dependencies = [
  "base64 0.13.1",
  "flate2",
