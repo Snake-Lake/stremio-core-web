@@ -1,5 +1,8 @@
 # Stremio Core Web
 
+> [!WARNING]  
+>Moved to https://github.com/Stremio/stremio-core/tree/development/stremio-core-web
+
 [![npm](https://img.shields.io/npm/v/@stremio/stremio-core-web?style=flat-square)](https://www.npmjs.com/package/@stremio/stremio-core-web)
 
 Bridge between [stremio-core](https://github.com/stremio/stremio-core) and [stremio-web](https://github.com/stremio/stremio-web)
